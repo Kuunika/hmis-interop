@@ -1,22 +1,22 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 
-interface OHSPConfig {
+interface APIConfig {
   url: string;
   username: string;
   password: string;
 }
 
 @Injectable()
-export class OhspService {
+export class CoreApiService {
   constructor(private httpService: HttpService) {}
 
-  get ohspConfiguration(): OHSPConfig {
-    const { OHSP_BASE_URL, OHSP_USERNAME, OHSP_PASSWORD } = process.env;
+  get apiConfiguration(): APIConfig {
+    const { API_BASE_URL, API_USERNAME, API_PASSWORD } = process.env;
     return {
-      url: OHSP_BASE_URL,
-      username: OHSP_USERNAME,
-      password: OHSP_PASSWORD,
+      url: API_BASE_URL,
+      username: API_USERNAME,
+      password: API_PASSWORD,
     };
   }
 
@@ -24,7 +24,7 @@ export class OhspService {
     _resource: string,
     _data: any,
   ): Promise<AxiosResponse> {
-    const { url, username, password } = this.ohspConfiguration;
+    const { url, username, password } = this.apiConfiguration;
     const response = await this.httpService
       .post(`${url}${_resource}`, _data, {
         auth: {
@@ -37,7 +37,7 @@ export class OhspService {
   }
 
   private async getData(_resource: string): Promise<AxiosResponse> {
-    const { url, username, password } = this.ohspConfiguration;
+    const { url, username, password } = this.apiConfiguration;
     const response = await this.httpService
       .get(`${url}${_resource}`, {
         auth: {

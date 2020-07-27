@@ -10,15 +10,14 @@ import {
   Patch,
   HttpService,
 } from '@nestjs/common';
-import { DashboardDataService } from './dashboard-data/dashboard-data.service';
-import { OhspService } from './ohsp/ohsp.service';
+import { CoreApiService } from './coreservice/coreapi.service';
 import { Request } from 'express';
 
 const BASE_API_URL = '/ohsp/api/v0';
 @Controller()
 export class AppController {
   constructor(
-    private readonly ohspService: OhspService,
+    private readonly coreApiService: CoreApiService,
     private readonly http: HttpService,
   ) {}
 
@@ -60,7 +59,7 @@ export class AppController {
   async catchAllGet(@Req() req: Request): Promise<Record<string, any>> {
     try {
       const resource = this.getResourceFromURL(req.url);
-      return await this.ohspService.get(resource);
+      return await this.coreApiService.get(resource);
     } catch (e) {
       this.handleException(e);
     }
@@ -73,7 +72,7 @@ export class AppController {
   ): Promise<Record<string, any>> {
     try {
       const resource = this.getResourceFromURL(req.url);
-      return await this.ohspService.post(resource, data);
+      return await this.coreApiService.post(resource, data);
     } catch (e) {
       this.handleException(e);
     }

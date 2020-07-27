@@ -1,12 +1,11 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DashboardDataService } from './dashboard-data/dashboard-data.service';
-import { OhspService } from './ohsp/ohsp.service';
+import { CoreApiService } from './coreservice/coreapi.service';
 
 @Module({
   imports: [HttpModule],
   controllers: [AppController],
-  providers: [AppService, DashboardDataService, OhspService],
+  providers: [DashboardDataService, CoreApiService],
 })
 export class AppModule {}
