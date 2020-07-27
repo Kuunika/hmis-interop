@@ -11,6 +11,7 @@ async function bootstrap() {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  const port = process.env.OHSP_PORT;
+  await app.listen(port);
 }
 bootstrap();
