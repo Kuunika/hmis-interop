@@ -8,21 +8,15 @@ import {
   Put,
   HttpStatus,
   Patch,
-  HttpService,
 } from '@nestjs/common';
 import { CoreApiService } from './coreservice/coreapi.service';
 import { Request } from 'express';
-
-const BASE_API_URL = '/ohsp/api/v0';
 @Controller()
 export class AppController {
-  constructor(
-    private readonly coreApiService: CoreApiService,
-    private readonly http: HttpService,
-  ) {}
+  constructor(private readonly coreApiService: CoreApiService) {}
 
   private getResourceFromURL(url: string): string {
-    return url.split(BASE_API_URL)[1].slice(1);
+    return url.split(process.env.API_GLOBAL_BASE_URL)[1].slice(1);
   }
 
   private handleException(e: any) {
@@ -31,31 +25,7 @@ export class AppController {
     throw new HttpException(data, status);
   }
 
-  @Get(`${BASE_API_URL}/dashboard/districts/aggregates`)
-  async districtAggregates(): Promise<Record<string, any>> {
-    try {
-      const { data } = await this.http
-        .get(`${process.env.COVID_DASHBOARD_API_URL}districts/aggregates`)
-        .toPromise();
-      return data;
-    } catch (e) {
-      this.handleException(e);
-    }
-  }
-
-  @Get(`${BASE_API_URL}/dashboard/aggregates`)
-  async aggregates(): Promise<Record<string, any>> {
-    try {
-      const { data } = await this.http
-        .get(`${process.env.COVID_DASHBOARD_API_URL}aggregates`)
-        .toPromise();
-      return data;
-    } catch (e) {
-      this.handleException(e);
-    }
-  }
-
-  @Get(`${BASE_API_URL}/*`)
+  @Get(`*`)
   async catchAllGet(@Req() req: Request): Promise<Record<string, any>> {
     try {
       const resource = this.getResourceFromURL(req.url);
@@ -65,7 +35,7 @@ export class AppController {
     }
   }
 
-  @Post(`${BASE_API_URL}/*`)
+  @Post(`*`)
   async catchAllPost(
     @Body() data: any,
     @Req() req: Request,
@@ -78,12 +48,12 @@ export class AppController {
     }
   }
 
-  @Put(`${BASE_API_URL}/*`)
+  @Put(`*`)
   async catchAllPut(): Promise<Record<string, any>> {
     throw new HttpException('Not Implemented', HttpStatus.NOT_IMPLEMENTED);
   }
 
-  @Patch(`${BASE_API_URL}/*`)
+  @Patch(`*`)
   async catchAllPatch(): Promise<Record<string, any>> {
     throw new HttpException('Not Implemented', HttpStatus.NOT_IMPLEMENTED);
   }
